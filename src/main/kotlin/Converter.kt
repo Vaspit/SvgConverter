@@ -12,9 +12,19 @@ object Converter {
     }
 
     fun readFile() {
-        println("Enter input file path:")
+        println("Enter input file name with an extension:")
         val inputFilePath = readln()
-        val inputFile = File(inputFilePath)
+        val currentDirectoryPath = System.getProperty("user.dir")
+
+        val currentDirectory = File("$currentDirectoryPath\\input_file")
+        val filePath = inputFilePath.ifEmpty { currentDirectory.listFiles()?.get(0)?.path }
+
+        if (filePath == null) {
+            println("Error: file path is null or file doesn't exist!")
+            return
+        }
+
+        val inputFile = File(filePath)
         val reader = BufferedReader(inputFile.reader())
 
         //read file line by line

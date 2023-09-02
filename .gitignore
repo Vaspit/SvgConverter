@@ -1,2 +1,5 @@
 # Project exclude paths
 /.gradle/
+/.build/
+/.compileKotlin/
+/.input_file/
