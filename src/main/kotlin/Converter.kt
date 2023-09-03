@@ -35,7 +35,7 @@ object Converter {
             if (lineData != null) {
                 when {
                     lineData.startsWith("<svg") -> {
-                        lineList.add(SvgLine(lineType = SvgLineType.HEADER, data = lineData))
+                        lineList.add(SvgLine(lineType = SvgLineType.SVG_START, data = lineData))
                     }
                     lineData.startsWith("<rect") -> {
                         lineList.add(SvgLine(lineType = SvgLineType.RECT, data = lineData))
@@ -50,8 +50,8 @@ object Converter {
 
         reader.close()
 
-        val svgHeader = lineList.find { it.lineType == SvgLineType.HEADER }
-        val svgPictureParams = svgHeader?.toSvgPictureParams()
+        val svgSVGSTART = lineList.find { it.lineType == SvgLineType.SVG_START }
+        val svgPictureParams = svgSVGSTART?.toSvgPictureParams()
 
         val svgPath = lineList.find { it.lineType == SvgLineType.PATH }
         val svgPathParams = svgPath?.toPath()

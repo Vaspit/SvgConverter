@@ -2,8 +2,10 @@ package data
 
 import java.util.regex.Pattern
 
+// TODO: find out how to add appropriate label (M,H,V,Z...) for vector coordinates
+
 enum class SvgLineType {
-    HEADER, RECT, PATH, SVG_FINISH
+    SVG_START, RECT, PATH, SVG_END
 }
 
 /**
@@ -15,6 +17,9 @@ data class SvgLine(
     val data: String
 ) {
 
+    /**
+     * @return [SvgPathParams], that contains vectors coordinates and their color
+     */
     fun toPath(): SvgPathParams {
         if (this.lineType != SvgLineType.PATH)
             throw Exception("SVG line type is ${this.lineType.name} but ${SvgLineType.PATH.name} expected")
@@ -23,8 +28,12 @@ data class SvgLine(
         val matcher = pathPattern.matcher(data)
 
         return if (matcher.find()) {
+            val path = matcher.group(1)
+            val coordinates = getCoordinatesFromPath(path)
+
             SvgPathParams(
-                path = matcher.group(1),
+                path = path,
+                coordinates = coordinates,
                 fill = matcher.group(2),
             )
         } else {
@@ -32,9 +41,12 @@ data class SvgLine(
         }
     }
 
+    /**
+     * This method return general picture parameters, such as width, height, background color and so on
+     */
     fun toSvgPictureParams(): SvgPictureParams {
-        if (this.lineType != SvgLineType.HEADER)
-            throw Exception("SVG line type is ${this.lineType.name} but ${SvgLineType.HEADER.name} expected")
+        if (this.lineType != SvgLineType.SVG_START)
+            throw Exception("SVG line type is ${this.lineType.name} but ${SvgLineType.SVG_START.name} expected")
 
         val pattern = """([a-zA-Z-]+)="([^"]+)"""".toRegex()
         val matches = pattern.findAll(this.data)
@@ -53,5 +65,23 @@ data class SvgLine(
             fill = parametersMap[SvgPictureParamsTypes.FILL.paramName] ?: "",
             xmlns = parametersMap[SvgPictureParamsTypes.XMLNS.paramName] ?: ""
         )
+    }
+
+    private fun getCoordinatesFromPath(path: String): MutableList<Pair<Double, Double>> {
+        val matches = Regex("""[-+]?\d+\.\d+""").findAll(path)
+        val coordinates = mutableListOf<Pair<Double, Double>>()
+        var x: Double? = null
+        var y: Double?
+
+        for (match in matches) {
+            if (x == null) {
+                x = match.value.toDouble()
+            } else {
+                y = match.value.toDouble()
+                coordinates.add(Pair(x, y))
+                x = null
+            }
+        }
+        return coordinates
     }
 }
