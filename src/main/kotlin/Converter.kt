@@ -1,6 +1,5 @@
 import data.SvgLine
 import data.SvgLineType
-import utils.toSvgPictureParams
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
@@ -54,7 +53,12 @@ object Converter {
         val svgHeader = lineList.find { it.lineType == SvgLineType.HEADER }
         val svgPictureParams = svgHeader?.toSvgPictureParams()
 
+        val svgPath = lineList.find { it.lineType == SvgLineType.PATH }
+        val svgPathParams = svgPath?.toPath()
+
         println(svgPictureParams)
+        println()
+        println(svgPathParams)
     }
 
     fun createEmptyVectorXml(height: Int, width: Int, viewPortHeight: Int, viewPortWidth: Int) {
