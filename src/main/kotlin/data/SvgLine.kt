@@ -67,21 +67,22 @@ data class SvgLine(
         )
     }
 
-    private fun getCoordinatesFromPath(path: String): MutableList<Pair<Double, Double>> {
-        val matches = Regex("""[-+]?\d+\.\d+""").findAll(path)
-        val coordinates = mutableListOf<Pair<Double, Double>>()
-        var x: Double? = null
-        var y: Double?
+    private fun getCoordinatesFromPath(path: String): MutableList<Coordinate> {
+        // TODO: coordinates are incorrect
+        val regex = """([MLHCV]?)([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)(Z)?""".toRegex()
+        val matches = regex.findAll(path)
+
+        val coordinates = mutableListOf<Coordinate>()
 
         for (match in matches) {
-            if (x == null) {
-                x = match.value.toDouble()
-            } else {
-                y = match.value.toDouble()
-                coordinates.add(Pair(x, y))
-                x = null
-            }
+            val type = match.groupValues[1].ifEmpty { "" }
+            val x = match.groupValues[2].toDouble()
+            val y = match.groupValues[3].toDouble()
+            val isEnd = match.groupValues[4] == "Z"
+
+            coordinates.add(Coordinate(type, x, y, isEnd))
         }
+
         return coordinates
     }
 }
