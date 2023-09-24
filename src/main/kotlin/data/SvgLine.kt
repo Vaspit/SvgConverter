@@ -29,11 +29,11 @@ data class SvgLine(
 
         return if (matcher.find()) {
             val path = matcher.group(1)
-            val coordinates = getCoordinatesFromPath(path)
+            val coordinates = getCommandsFromPath(path)
 
             SvgPathParams(
                 path = path,
-                coordinates = coordinates,
+                commands = coordinates,
                 fill = matcher.group(2),
             )
         } else {
@@ -67,22 +67,16 @@ data class SvgLine(
         )
     }
 
-    private fun getCoordinatesFromPath(path: String): MutableList<Coordinate> {
-        // TODO: coordinates are incorrect
-        val regex = """([MLHCV]?)([-+]?\d+\.\d+)\s+([-+]?\d+\.\d+)(Z)?""".toRegex()
-        val matches = regex.findAll(path)
+    private fun getCommandsFromPath(path: String): MutableList<Command> {
+        val regex = Regex("\\s+")
+        val resultList = path.split(regex)
+        val commands: MutableList<Command> = mutableListOf()
 
-        val coordinates = mutableListOf<Coordinate>()
-
-        for (match in matches) {
-            val type = match.groupValues[1].ifEmpty { "" }
-            val x = match.groupValues[2].toDouble()
-            val y = match.groupValues[3].toDouble()
-            val isEnd = match.groupValues[4] == "Z"
-
-            coordinates.add(Coordinate(type, x, y, isEnd))
+        resultList.forEach { command ->
+            // TODO: add command parsing
+            commands.add(Command(command = command, isEnd = false))
         }
 
-        return coordinates
+        return commands
     }
 }

@@ -2,6 +2,6 @@ package data
 
 data class SvgPathParams(
     val path: String = "",
-    val coordinates: List<Coordinate>,
+    val commands: List<Command>,
     val fill: String = ""
 )
