@@ -1,10 +1,8 @@
 package data
 
-/**
- * @param type type of coordinate in SVG picture coordinates, such as M, C, H, V and so on
- */
+import utils.SvgCommandType
+
 data class Command(
-    val type: String = "",
-    val command: String,
-    val isEnd: Boolean
+    val type: SvgCommandType,
+    val command: String
 )

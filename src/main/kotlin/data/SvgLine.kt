@@ -1,5 +1,6 @@
 package data
 
+import utils.getCommandType
 import java.util.regex.Pattern
 
 // TODO: find out how to add appropriate label (M,H,V,Z...) for vector coordinates
@@ -42,7 +43,7 @@ data class SvgLine(
     }
 
     /**
-     * This method return general picture parameters, such as width, height, background color and so on
+     * @return general picture parameters, such as width, height, background color and so on
      */
     fun toSvgPictureParams(): SvgPictureParams {
         if (this.lineType != SvgLineType.SVG_START)
@@ -73,8 +74,14 @@ data class SvgLine(
         val commands: MutableList<Command> = mutableListOf()
 
         resultList.forEach { command ->
-            // TODO: add command parsing
-            commands.add(Command(command = command, isEnd = false))
+            val type = command.getCommandType()
+
+            commands.add(
+                Command(
+                    type = type,
+                    command = command
+                )
+            )
         }
 
         return commands
