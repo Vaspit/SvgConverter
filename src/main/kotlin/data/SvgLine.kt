@@ -1,13 +1,9 @@
 package data
 
+import utils.SvgLineType
+import utils.SvgPictureParamsTypes
 import utils.getCommandType
 import java.util.regex.Pattern
-
-// TODO: find out how to add appropriate label (M,H,V,Z...) for vector coordinates
-
-enum class SvgLineType {
-    SVG_START, RECT, PATH, SVG_END
-}
 
 /**
  * @param lineType an SVG tag

@@ -1,5 +1,5 @@
 import data.SvgLine
-import data.SvgLineType
+import utils.SvgLineType
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileWriter
@@ -7,7 +7,7 @@ import java.io.FileWriter
 object Converter {
 
     fun processFile(inputFilePath: String, outputFilePath: String) {
-        TODO("Is not implemented yet")
+        TODO("Yet not implemented")
     }
 
     fun readFile() {
